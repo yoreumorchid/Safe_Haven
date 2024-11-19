@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBFBFB"
+    tools:context=".SignupFragment">
+
+    <ImageView
+        android:id="@+id/IvLogo"
+        android:layout_width="126dp"
+        android:layout_height="161dp"
+        android:layout_marginTop="56dp"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/IvName"
+        android:layout_width="26dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/user_shield_alt_1_svgrepo_com"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IvLogo" />
+
+    <EditText
+        android:id="@+id/EtName"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="@string/prompt_name"
+        android:inputType="text"
+        android:textColorHint="#9E9595"
+        app:layout_constraintStart_toEndOf="@+id/IvName"
+        app:layout_constraintTop_toBottomOf="@+id/IvLogo" />
+
+    <ImageView
+        android:id="@+id/IvEmail"
+        android:layout_width="26dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/email_svgrepo_com"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IvName" />
+
+    <EditText
+        android:id="@+id/EtEmail_SignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:ems="10"
+        android:hint="@string/prompt_email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toEndOf="@+id/IvEmail"
+        app:layout_constraintTop_toBottomOf="@+id/EtName" />
+
+    <ImageView
+        android:id="@+id/IvPassword"
+        android:layout_width="26dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/key_svgrepo_com"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IvEmail" />
+
+    <EditText
+        android:id="@+id/EtPassword_SignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:ems="10"
+        android:hint="@string/prompt_password"
+        android:inputType="numberPassword"
+        app:layout_constraintStart_toEndOf="@+id/IvPassword"
+        app:layout_constraintTop_toBottomOf="@+id/EtEmail_SignUp" />
+
+    <EditText
+        android:id="@+id/EtConfirmPswd_SignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:ems="10"
+        android:hint="@string/prompt_confirm_password"
+        android:inputType="numberPassword"
+        app:layout_constraintStart_toEndOf="@+id/IvPassword"
+        app:layout_constraintTop_toBottomOf="@+id/EtPassword_SignUp" />
+
+    <ImageView
+        android:id="@+id/IvPhoneNum"
+        android:layout_width="26dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/phone_flip_svgrepo_com"
+        app:layout_constraintEnd_toEndOf="@+id/IvPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/EtPhoneNum_SignUp" />
+
+    <EditText
+        android:id="@+id/EtPhoneNum_SignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:ems="10"
+        android:hint="@string/prompt_phone_number"
+        android:inputType="phone"
+        app:layout_constraintStart_toEndOf="@+id/IvPhoneNum"
+        app:layout_constraintTop_toBottomOf="@+id/EtConfirmPswd_SignUp" />
+
+    <ImageView
+        android:id="@+id/IvBloodType"
+        android:layout_width="26dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/blood_type_svgrepo_com"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IvPhoneNum" />
+
+    <Spinner
+        android:id="@+id/SpnBloodType"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/IvBloodType"
+        app:layout_constraintTop_toBottomOf="@+id/EtPhoneNum_SignUp" />
+
+    <CheckBox
+        android:id="@+id/CbFemale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/gender_female"
+        app:layout_constraintBottom_toTopOf="@+id/BtnSignUp"
+        app:layout_constraintEnd_toStartOf="@+id/BtnSignUp" />
+
+    <CheckBox
+        android:id="@+id/CbMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/gender_male"
+        app:layout_constraintBottom_toTopOf="@+id/BtnSignUp"
+        app:layout_constraintStart_toEndOf="@+id/BtnSignUp" />
+
+    <Button
+        android:id="@+id/BtnSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Sign up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,41 @@
+<resources>
+    <!-- Log in Page -->
+    <string name="prompt_email">Enter your Email</string>
+    <string name="prompt_password">Enter your Password</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_log_in">Log in</string>
+    <string name="action_forgot_password">Forgot Password?</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <!-- Call Page -->
+    <string name="app_name">Safe Heaven</string>
+    <string name="call_top_bar">Emergency Call Needed?</string>
+    <string name="call_instruction">Just hold the button to call. Safe Heaven will call your first emergency contact.
+        Pressing emergency call will enable real-time location sharing and call recording. Both can be manually switched off.</string>
+    <string name="call_switch_location">Share Real-Time Location</string>
+    <string name="call_switch_record">Record Call</string> Automatically share your live location via SMS with emergency contacts.
+    <string name="call_text_location">Automatically share your live location via SMS with emergency contacts.</string>
+    <string name="call_text_record">Automatically record the call for future reference.</string>
+
+    <!-- Profile Page -->
+    <string name="action_log_out">Log out</string>
+
+    <!-- Update Email Page -->
+    <string name="prompt_old_email">Enter your old Email</string>
+    <string name="prompt_new_email">Enter your new Email</string>
+    <string name="label_old_email">Old Email</string>
+    <string name="label_new_email">New Email</string>
+    <string name="label_password">Password</string>
+    <string name="button_confirm">Confirm</string>
+
+    <!-- Sign up Page -->
+    <string name="prompt_name">Enter your Full Name</string>
+    <string name="prompt_confirm_password">Confirm Password</string>
+    <string name="prompt_phone_number">Enter your Phone Number</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_male">Male</string>
+
+</resources>
