@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.safeheaven"
+    namespace = "com.example.safehaven"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.safeheaven"
+        applicationId = "com.example.safehaven"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

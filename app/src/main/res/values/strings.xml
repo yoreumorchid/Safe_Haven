@@ -11,9 +11,9 @@
     <string name="login_failed">"Login failed"</string>
 
     <!-- Call Page -->
-    <string name="app_name">Safe Heaven</string>
+    <string name="app_name">Safe Haven</string>
     <string name="call_top_bar">Emergency Call Needed?</string>
-    <string name="call_instruction">Just hold the button to call. Safe Heaven will call your first emergency contact.
+    <string name="call_instruction">Just hold the button to call. Safe Haven will call your first emergency contact.
         Pressing emergency call will enable real-time location sharing and call recording. Both can be manually switched off.</string>
     <string name="call_switch_location">Share Real-Time Location</string>
     <string name="call_switch_record">Record Call</string> Automatically share your live location via SMS with emergency contacts.

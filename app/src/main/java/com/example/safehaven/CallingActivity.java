@@ -1,4 +1,4 @@
-package com.example.safeheaven;
+package com.example.safehaven;
 
 import android.os.Bundle;
 
