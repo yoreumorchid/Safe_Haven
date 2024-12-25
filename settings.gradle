@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Safe Haven"
-include(":app")
+rootProject.name = 'Safe Haven'
+include ':app'
  

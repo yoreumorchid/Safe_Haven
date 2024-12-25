@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/main_color"
+tools:context=".UpdateEmailActivity">
+
+<ImageView
+    android:id="@+id/IvProfile"
+    android:layout_width="105dp"
+    android:layout_height="114dp"
+    android:layout_marginTop="96dp"
+    android:src="@drawable/ic_avatar"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<TextView
+    android:id="@+id/TvName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:fontFamily="sans-serif-black"
+    android:text="Marceline"
+    android:textSize="34sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/IvProfile" />
+
+<TextView
+    android:id="@+id/TvOldEmail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="84dp"
+    android:layout_marginTop="32dp"
+    android:fontFamily="sans-serif-condensed-medium"
+    android:text="@string/label_old_email"
+    android:textSize="20sp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/TvName" />
+
+<EditText
+    android:id="@+id/EtOldEmail"
+    android:layout_width="265dp"
+    android:layout_height="62dp"
+    android:layout_marginStart="84dp"
+    android:ems="10"
+    android:hint="@string/prompt_old_email"
+    android:inputType="textEmailAddress"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/TvOldEmail" />
+
+<TextView
+    android:id="@+id/TvNewEmail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="84dp"
+    android:layout_marginTop="24dp"
+    android:fontFamily="sans-serif-condensed-medium"
+    android:text="@string/label_new_email"
+    android:textSize="20sp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/EtOldEmail" />
+
+<EditText
+    android:id="@+id/EtNewEmail"
+    android:layout_width="265dp"
+    android:layout_height="62dp"
+    android:layout_marginStart="84dp"
+    android:ems="10"
+    android:hint="@string/prompt_new_email"
+    android:inputType="textEmailAddress"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/TvNewEmail" />
+
+<TextView
+    android:id="@+id/TvPassword"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="84dp"
+    android:layout_marginTop="24dp"
+    android:fontFamily="sans-serif-condensed-medium"
+    android:text="@string/label_password"
+    android:textSize="20sp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/EtNewEmail" />
+
+<EditText
+    android:id="@+id/EtPassword"
+    android:layout_width="265dp"
+    android:layout_height="62dp"
+    android:layout_marginStart="84dp"
+    android:ems="10"
+    android:hint="@string/prompt_password"
+    android:inputType="numberPassword"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/TvPassword" />
+
+<Button
+    android:id="@+id/BtnUpdateEmailConfirm"
+    android:layout_width="134dp"
+    android:layout_height="58dp"
+    android:layout_marginTop="24dp"
+    android:text="@string/button_confirm"
+    android:textSize="20sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/EtPassword" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

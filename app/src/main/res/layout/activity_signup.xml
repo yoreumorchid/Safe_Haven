@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FBFBFB"
-    tools:context=".SignupFragment">
+    android:background="@color/main_color"
+    tools:context=".SignupActivity">
 
     <ImageView
         android:id="@+id/IvLogo"
         android:layout_width="126dp"
-        android:layout_height="161dp"
+        android:layout_height="126dp"
         android:layout_marginTop="56dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,10 +20,10 @@
     <ImageView
         android:id="@+id/IvName"
         android:layout_width="26dp"
-        android:layout_height="25dp"
+        android:layout_height="26dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/user_shield_alt_1_svgrepo_com"
+        android:src="@drawable/ic_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/IvLogo" />
 
@@ -37,7 +37,7 @@
         android:hint="@string/prompt_name"
         android:inputType="text"
         android:textColorHint="#9E9595"
-        app:layout_constraintStart_toEndOf="@+id/IvName"
+        app:layout_constraintStart_toEndOf="@+id/IvEmail"
         app:layout_constraintTop_toBottomOf="@+id/IvLogo" />
 
     <ImageView
@@ -46,16 +46,16 @@
         android:layout_height="25dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="24dp"
-        android:src="@drawable/email_svgrepo_com"
+        android:src="@drawable/ic_email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IvName" />
+        app:layout_constraintTop_toBottomOf="@+id/EtName" />
 
     <EditText
-        android:id="@+id/EtEmail_SignUp"
+        android:id="@+id/EtEmail"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
@@ -65,36 +65,36 @@
     <ImageView
         android:id="@+id/IvPassword"
         android:layout_width="26dp"
-        android:layout_height="25dp"
+        android:layout_height="26dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/key_svgrepo_com"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_key_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/IvEmail" />
 
     <EditText
-        android:id="@+id/EtPassword_SignUp"
+        android:id="@+id/EtPassword"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="@string/prompt_password"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@+id/IvPassword"
-        app:layout_constraintTop_toBottomOf="@+id/EtEmail_SignUp" />
+        app:layout_constraintTop_toBottomOf="@+id/EtEmail" />
 
     <EditText
         android:id="@+id/EtConfirmPswd_SignUp"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="@string/prompt_confirm_password"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@+id/IvPassword"
-        app:layout_constraintTop_toBottomOf="@+id/EtPassword_SignUp" />
+        app:layout_constraintTop_toBottomOf="@+id/EtPassword" />
 
     <ImageView
         android:id="@+id/IvPhoneNum"
@@ -102,17 +102,17 @@
         android:layout_height="25dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="6dp"
-        android:src="@drawable/phone_flip_svgrepo_com"
+        android:src="@drawable/ic_phonenumber"
         app:layout_constraintEnd_toEndOf="@+id/IvPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/EtPhoneNum_SignUp" />
+        app:layout_constraintTop_toTopOf="@+id/EtPhoneNum" />
 
     <EditText
-        android:id="@+id/EtPhoneNum_SignUp"
+        android:id="@+id/EtPhoneNum"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="@string/prompt_phone_number"
         android:inputType="phone"
@@ -124,45 +124,51 @@
         android:layout_width="26dp"
         android:layout_height="25dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/blood_type_svgrepo_com"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_bloodtype_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IvPhoneNum" />
+        app:layout_constraintTop_toTopOf="@+id/SpnBloodType" />
 
     <Spinner
         android:id="@+id/SpnBloodType"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
+        android:entries="@array/blood_groups"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toEndOf="@+id/IvBloodType"
-        app:layout_constraintTop_toBottomOf="@+id/EtPhoneNum_SignUp" />
+        app:layout_constraintTop_toBottomOf="@+id/EtPhoneNum" />
 
-    <CheckBox
-        android:id="@+id/CbFemale"
+    <RadioGroup
+        android:id="@+id/RgGender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="@string/gender_female"
-        app:layout_constraintBottom_toTopOf="@+id/BtnSignUp"
-        app:layout_constraintEnd_toStartOf="@+id/BtnSignUp" />
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SpnBloodType">
 
-    <CheckBox
-        android:id="@+id/CbMale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="@string/gender_male"
-        app:layout_constraintBottom_toTopOf="@+id/BtnSignUp"
-        app:layout_constraintStart_toEndOf="@+id/BtnSignUp" />
+        <RadioButton
+            android:id="@+id/RbMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:text="@string/gender_male" />
+
+        <RadioButton
+            android:id="@+id/RbFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gender_female" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/BtnSignUp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="52dp"
         android:text="Sign up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

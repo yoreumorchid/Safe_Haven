@@ -5,15 +5,68 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_color"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/BtnProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="120dp"
+        android:backgroundTint="@color/main_color"
+        android:drawableTop="@drawable/ic_profile"
+        android:text="Profile"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/IvMessage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/IvMessage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/IvMessage"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="230dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/emergency_button" />
+
+    <Button
+        android:id="@+id/BtnContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:drawableLeft="@drawable/ic_baseline_person_add_alt_24"
+        android:drawablePadding="10sp"
+        android:paddingHorizontal="50sp"
+        android:paddingVertical="10sp"
+        android:text="Add Contacts"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IvMessage" />
+
+    <Button
+        android:id="@+id/BtnEmergencyCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="24dp"
+        android:drawableLeft="@drawable/ic_call_24"
+        android:drawablePadding="10sp"
+        android:paddingHorizontal="50sp"
+        android:paddingVertical="10sp"
+
+        android:text="Emergency Call"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BtnContacts" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

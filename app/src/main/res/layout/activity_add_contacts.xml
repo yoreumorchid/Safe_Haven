@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_color"
+    tools:context=".AddContactsActivity">
+
+  <Button
+      android:id="@+id/BtnEditContacts"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="50dp"
+      android:backgroundTint="@color/main_color"
+      android:drawableLeft="@drawable/ic_edit_24"
+      android:text="Edit"
+      android:textColor="@color/black"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+      android:id="@+id/TvContacts"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="128dp"
+      android:text="Contacts"
+      android:textSize="34sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <EditText
+      android:id="@+id/EtContact1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radiusbox"
+      android:drawableLeft="@drawable/ic_baseline_person_outline_24"
+      android:drawablePadding="20sp"
+      android:hint="Emergency Contact 1"
+      android:inputType="phone"
+      android:padding="16sp"
+      android:textColor="@color/black"
+      android:textColorHint="@color/white"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/TvContacts" />
+
+  <EditText
+      android:id="@+id/EtContact2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="24dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radiusbox"
+      android:drawableLeft="@drawable/ic_baseline_person_outline_24"
+      android:drawablePadding="20sp"
+      android:hint="Emergency Contact 2"
+      android:inputType="phone"
+      android:padding="16sp"
+      android:textColor="@color/black"
+      android:textColorHint="@color/white"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/EtContact1" />
+
+  <EditText
+      android:id="@+id/EtContact3"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="24dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radiusbox"
+      android:drawableLeft="@drawable/ic_baseline_person_outline_24"
+      android:drawablePadding="20sp"
+      android:hint="Emergency Contact 3"
+      android:inputType="phone"
+      android:padding="16sp"
+      android:textColor="@color/black"
+      android:textColorHint="@color/white"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/EtContact2" />
+
+  <EditText
+      android:id="@+id/EtContact4"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="24dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radiusbox"
+      android:drawableLeft="@drawable/ic_baseline_person_outline_24"
+      android:drawablePadding="20sp"
+      android:hint="Emergency Contact 4"
+      android:inputType="phone"
+      android:padding="16sp"
+      android:textColor="@color/black"
+      android:textColorHint="@color/white"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/EtContact3" />
+
+  <Button
+      android:id="@+id/BtnSaveContacts"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:backgroundTint="#FCF5FD"
+      android:text="Save Changes"
+      android:textColor="#002738"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.485"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/EtContact4" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
