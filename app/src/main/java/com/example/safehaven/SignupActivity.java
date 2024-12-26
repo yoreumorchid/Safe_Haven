@@ -120,12 +120,16 @@ public class SignupActivity extends AppCompatActivity {
     // Sign up user using Firebase Authentication
     private void signUpUser(UserData userData) {
         auth.createUserWithEmailAndPassword(userData.email, userData.password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(task ->  {
                         if(task.isSuccessful()) {
-                            Log.d("Signup", "User registered successfully");
-                            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            // Debug
+                            String userID = FirebaseAuth.getInstance().getCurrentUser() != null
+                                    ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                                    : "null_user";
+
+                            Log.d("Signup", "User registered successfully, UserID: " + userID);
+                            Log.d("Signup", "Calling saveUserData with userID: " + userID);
+
                             saveUserData(userData, userID);
                             navigateToLogin();
                         } else {
@@ -134,35 +138,44 @@ public class SignupActivity extends AppCompatActivity {
                                     "Registration failed: " + task.getException().getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
-                    }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignupActivity.this, "Register failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this,
+                                "Register failed: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     // Save User data into Firebase Realtime Database
     private void saveUserData(UserData userData, String userID) {
-        FirebaseDatabase.getInstance().getReference("Users").child(userID)
+        Log.d("Database", "Saving data for userID: " + userID);
+
+        FirebaseDatabase.getInstance("https://safe-haven-38678-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("Users").child(userID)
                 .setValue(userData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            Log.d("Database","User data saved successfully");
                             initializeUserContacts(userID);
                         } else {
-                            Toast.makeText(SignupActivity.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
+                            Log.e("Database", "Failed to save user data");
+                            Toast.makeText(SignupActivity.this,
+                                    "Failed to save user data.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignupActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this,
+                                "Error: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -170,14 +183,16 @@ public class SignupActivity extends AppCompatActivity {
     // Initialize empty contacts for new user
     private void initializeUserContacts(String userID) {
         Contacts contacts = new Contacts("", "", "", "");
-        FirebaseDatabase.getInstance().getReference("Users").child(userID).child("Contacts")
+        FirebaseDatabase.getInstance("https://safe-haven-38678-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("Users").child(userID).child("Contacts")
                 .setValue(contacts)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
                         navigateToLogin();
                     } else {
-                        Toast.makeText(this, "Failed to initialize contacts!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,
+                                "Failed to initialize contacts",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }

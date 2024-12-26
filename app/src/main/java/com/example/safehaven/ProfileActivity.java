@@ -65,18 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         saveChanges.setVisibility(View.GONE);
 
-
-        // Populate blood type spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.blood_groups,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        bloodTypeSpinner.setAdapter(adapter);
-
         // Load user data
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://safe-haven-38678-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("Users");
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -85,7 +76,8 @@ public class ProfileActivity extends AppCompatActivity {
                     name.setText(userProfile.name);
                     email.setText(userProfile.email);
                     phoneNumber.setText(userProfile.phoneNumber);
-                    bloodTypeSpinner.setSelection(adapter.getPosition(userProfile.bloodType));
+                    int position = getPositionFromEntries(userProfile.bloodType);
+                    bloodTypeSpinner.setSelection(position);
                     if(userProfile.gender.equalsIgnoreCase("Male")) {
                         maleRadio.setChecked(true);
                     } else if(userProfile.gender.equalsIgnoreCase("Female")) {
@@ -189,6 +181,15 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private int getPositionFromEntries(String bloodType) {
+        String[] bloodGroups = getResources().getStringArray(R.array.blood_groups);
+        for (int i = 0; i < bloodGroups.length; i++) {
+            if (bloodGroups[i].equals(bloodType)) {
+                return i;
+            }
+        }
+        return 0;
+    }
     private void disableEditing() {
         name.setEnabled(false);
         phoneNumber.setEnabled(false);

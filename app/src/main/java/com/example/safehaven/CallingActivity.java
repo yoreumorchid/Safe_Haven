@@ -1,10 +1,18 @@
 package com.example.safehaven;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.telephony.PhoneStateListener;
+import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -24,13 +32,26 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CallingActivity extends AppCompatActivity {
     private ImageView emergencyCall;
-    private Switch locationSharing, callRecording;
-
     private static final int PERMISSION_REQUEST_CODE = 100;
     private FirebaseAuth auth;
     private DatabaseReference contactsReference;
     private String emergencyContact1;
+
+    // Call recording
+    private Switch callRecording;
     private MediaRecorder mMediaRecorder;
+    private boolean isRecording = false;
+
+    // Location sharing
+    private Switch locationSharing;
+    private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
+    private Handler mHandler;
+    private String currentLocationMessage = "Location unavailable.";
+    private Runnable locationUpdateTask;
+    private final long UPDATE_INTERVAL = 30000;
+    private final float MIN_DISTANCE = 10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +62,14 @@ public class CallingActivity extends AppCompatActivity {
         locationSharing = findViewById(R.id.SwLocShare);
         callRecording = findViewById(R.id.SwRecCall);
 
+        // Set default states for the toggles
+        locationSharing.setChecked(true);
+        callRecording.setChecked(true);
+
         // Load emergency contact
         auth = FirebaseAuth.getInstance();
         String userID = auth.getCurrentUser().getUid();
-        contactsReference = FirebaseDatabase.getInstance()
+        contactsReference = FirebaseDatabase.getInstance("https://safe-haven-38678-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference("Users")
                 .child(userID)
                 .child("Contacts");
@@ -71,16 +96,23 @@ public class CallingActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize location sharing
+        initializeLocationSharing();
+
         // Check and request necessary permissions
         checkAndRequestPermissions();
+
+        // Monitor phone state for recording
+        setupCallRecordingListener();
 
         emergencyCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ActivityCompat.checkSelfPermission(CallingActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     makeEmergencyCall();
+
                     if(locationSharing.isChecked()) {
-                        shareLocation();
+                        startLocationUpdates();
                     }
                     if(callRecording.isChecked()) {
                         recordCall();
@@ -92,34 +124,64 @@ public class CallingActivity extends AppCompatActivity {
                 }
             }
         });
-
-        locationSharing.setOnCheckedChangeListener(((buttonView, isChecked) -> {
-            if(isChecked) {
-                shareLocation();
-            } else {
-                Toast.makeText(this,
-                        "Location sharing disabled",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }));
-
-        callRecording.setOnCheckedChangeListener(((buttonView, isChecked) -> {
-            if(isChecked) {
-                recordCall();
-            } else {
-                Toast.makeText(this,
-                        "Call recording disabled",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }));
     }
 
+    // Location sharing
+    private void initializeLocationSharing() {
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mHandler = new Handler();
+        mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                currentLocationMessage = "I need help! My current location is: "
+                        + "http://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
+            }
+        };
+
+        locationUpdateTask = new Runnable() {
+            @Override
+            public void run() {
+                if(emergencyContact1 != null) {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(emergencyContact1, null, currentLocationMessage, null, null);
+                    Toast.makeText(CallingActivity.this,
+                            "Location shared.",
+                            Toast.LENGTH_SHORT).show();
+                }
+                mHandler.postDelayed(this, UPDATE_INTERVAL);
+            }
+        };
+    }
+
+    private void startLocationUpdates() {
+        try {
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    UPDATE_INTERVAL,
+                    MIN_DISTANCE,
+                    mLocationListener);
+            mHandler.post(locationUpdateTask);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stopLocationUpdates() {
+        if (mLocationManager != null && mLocationListener != null) {
+            mLocationManager.removeUpdates(mLocationListener);
+        }
+        if (mHandler != null && locationUpdateTask != null) {
+            mHandler.removeCallbacks(locationUpdateTask);
+        }
+    }
+
+    // Permission request
     private void checkAndRequestPermissions() {
         String[] requiredPermissions = {
                 Manifest.permission.CALL_PHONE,
                 Manifest.permission.SEND_SMS,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_PHONE_STATE
         };
 
         if (!hasAllPermissions(requiredPermissions)) {
@@ -155,6 +217,34 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
+    // Emergency call
+    private void setupCallRecordingListener() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this,
+                    "READ_PHONE_STATE permission is required for call state listening.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String phoneNumber) {
+                super.onCallStateChanged(state, phoneNumber);
+
+                if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                    if (callRecording.isChecked()) {
+                        recordCall();
+                    }
+                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                    if (isRecording) {
+                        stopRecordingCall();
+                    }
+                    stopLocationUpdates();
+                }
+            }
+        }, PhoneStateListener.LISTEN_CALL_STATE);
+    }
 
     private void makeEmergencyCall() {
         if (emergencyContact1 != null && !emergencyContact1.isEmpty()) {
@@ -168,18 +258,10 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
-    private void shareLocation() {
-       Intent locationIntent = new Intent(this, MessageActivity.class);
-       startActivity(locationIntent);
-        Toast.makeText(this, "Sharing live location...", Toast.LENGTH_SHORT).show();
-    }
-    private boolean isRecording = false;
     private void recordCall() {
-        if(isRecording) {
-            stopRecoringCall();
-            Toast.makeText(this,
-                    "Call recording stopped",
-                    Toast.LENGTH_SHORT).show();
+
+        if (isRecording) {
+            Toast.makeText(this, "Recording already started.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -187,6 +269,7 @@ public class CallingActivity extends AppCompatActivity {
             if(mMediaRecorder == null) {
                 mMediaRecorder = new MediaRecorder();
             }
+
             // Set audio source to voice call
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
 
@@ -222,9 +305,15 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
-    private void stopRecoringCall() {
-        if(mMediaRecorder != null && isRecording) {
-            try {
+    private void stopRecordingCall() {
+
+        if (!isRecording) {
+            Toast.makeText(this, "No ongoing recording to stop.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if(mMediaRecorder != null && isRecording){
                 mMediaRecorder.stop();
                 mMediaRecorder.release();
                 mMediaRecorder = null;
@@ -232,15 +321,22 @@ public class CallingActivity extends AppCompatActivity {
                 Toast.makeText(this,
                         "Recording saved",
                         Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this,
-                        "Error stopping recording: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
             }
-        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,
+                    "Error stopping recording: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+            }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopLocationUpdates();
+        stopRecordingCall();
+    }
 
 
 

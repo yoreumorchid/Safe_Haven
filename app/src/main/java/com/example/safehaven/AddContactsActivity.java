@@ -40,7 +40,7 @@ public class AddContactsActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         userID = auth.getCurrentUser().getUid();
-        contactsReference = FirebaseDatabase.getInstance().getReference("Users")
+        contactsReference = FirebaseDatabase.getInstance("https://safe-haven-38678-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
                 .child(userID).child("Contacts");
 
         // Load contacts from Firebase

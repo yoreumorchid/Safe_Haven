@@ -80,7 +80,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            startActivity(new Intent(ForgotPasswordActivity.this, ProfileActivity.class));
+        } else {
+            startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+        }
         finish();
     }
 }

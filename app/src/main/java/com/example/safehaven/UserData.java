@@ -3,6 +3,7 @@ package com.example.safehaven;
 public class UserData {
     public String name, email, password, phoneNumber, bloodType, gender;
 
+    // Full parameter constructor
     public UserData(String name, String email, String password, String phoneNumber, String bloodType, String gender) {
         this.name = name;
         this.email = email;
@@ -10,6 +11,11 @@ public class UserData {
         this.phoneNumber = phoneNumber;
         this.bloodType = bloodType;
         this.gender = gender;
+    }
+
+    //No parameter constructor
+    public UserData() {
+
     }
 
     public String getName() {

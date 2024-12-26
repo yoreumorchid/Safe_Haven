@@ -41,7 +41,7 @@ public class MessageActivity extends AppCompatActivity {
         String userID = auth.getCurrentUser().getUid();
 
         // Retrieve emergency contacts
-        DatabaseReference reference = FirebaseDatabase.getInstance()
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://safe-haven-38678-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference("Users")
                 .child(userID)
                 .child("Contacts");
