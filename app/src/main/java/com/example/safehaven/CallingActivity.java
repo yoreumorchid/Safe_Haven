@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,11 +36,6 @@ public class CallingActivity extends AppCompatActivity {
     private DatabaseReference contactsReference;
     private String emergencyContact1;
 
-    // Call recording
-    private Switch callRecording;
-    private MediaRecorder mMediaRecorder;
-    private boolean isRecording = false;
-
     // Location sharing
     private Switch locationSharing;
     private LocationManager mLocationManager;
@@ -51,6 +45,8 @@ public class CallingActivity extends AppCompatActivity {
     private Runnable locationUpdateTask;
     private final long UPDATE_INTERVAL = 30000;
     private final float MIN_DISTANCE = 10;
+    private TelephonyManager telephonyManager;
+    private PhoneStateListener phoneStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +56,28 @@ public class CallingActivity extends AppCompatActivity {
         // Initialize UI components
         emergencyCall = findViewById(R.id.IvCall);
         locationSharing = findViewById(R.id.SwLocShare);
-        callRecording = findViewById(R.id.SwRecCall);
 
         // Set default states for the toggles
         locationSharing.setChecked(true);
-        callRecording.setChecked(true);
+
+        // Initialize Phone Listener
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        phoneStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String phoneNumber) {
+                super.onCallStateChanged(state, phoneNumber);
+                if(state == TelephonyManager.CALL_STATE_IDLE) {
+                    stopLocationUpdates();
+                    Toast.makeText(CallingActivity.this,
+                            "电话已挂断，位置分享已停止。",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        if (telephonyManager != null) {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
 
         // Load emergency contact
         auth = FirebaseAuth.getInstance();
@@ -102,9 +115,6 @@ public class CallingActivity extends AppCompatActivity {
         // Check and request necessary permissions
         checkAndRequestPermissions();
 
-        // Monitor phone state for recording
-        setupCallRecordingListener();
-
         emergencyCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,9 +124,7 @@ public class CallingActivity extends AppCompatActivity {
                     if(locationSharing.isChecked()) {
                         startLocationUpdates();
                     }
-                    if(callRecording.isChecked()) {
-                        recordCall();
-                    }
+
                 } else {
                     Toast.makeText(CallingActivity.this,
                             "Call permission is required to make emergency calls!",
@@ -180,7 +188,6 @@ public class CallingActivity extends AppCompatActivity {
                 Manifest.permission.CALL_PHONE,
                 Manifest.permission.SEND_SMS,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.READ_PHONE_STATE
         };
 
@@ -217,35 +224,6 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
-    // Emergency call
-    private void setupCallRecordingListener() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,
-                    "READ_PHONE_STATE permission is required for call state listening.",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(new PhoneStateListener() {
-            @Override
-            public void onCallStateChanged(int state, String phoneNumber) {
-                super.onCallStateChanged(state, phoneNumber);
-
-                if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    if (callRecording.isChecked()) {
-                        recordCall();
-                    }
-                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-                    if (isRecording) {
-                        stopRecordingCall();
-                    }
-                    stopLocationUpdates();
-                }
-            }
-        }, PhoneStateListener.LISTEN_CALL_STATE);
-    }
-
     private void makeEmergencyCall() {
         if (emergencyContact1 != null && !emergencyContact1.isEmpty()) {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -258,84 +236,14 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
-    private void recordCall() {
-
-        if (isRecording) {
-            Toast.makeText(this, "Recording already started.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            if(mMediaRecorder == null) {
-                mMediaRecorder = new MediaRecorder();
-            }
-
-            // Set audio source to voice call
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
-
-            // Set output format and encoder
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-            // Set output file location
-            String outputFilePath = getExternalFilesDir(null).
-                    getAbsolutePath() + "/Safe_Haven_Call_Recording.3gp";
-            mMediaRecorder.setOutputFile(outputFilePath);
-
-            // Start recording
-            mMediaRecorder.prepare();
-            mMediaRecorder.start();
-            isRecording = true;
-
-            Toast.makeText(this,
-                    "Call recording started",
-                    Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this,
-                    "Failed to start call recording: "
-            + e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
-
-            if(mMediaRecorder != null) {
-                mMediaRecorder.release();
-                mMediaRecorder = null;
-            }
-        }
-    }
-
-    private void stopRecordingCall() {
-
-        if (!isRecording) {
-            Toast.makeText(this, "No ongoing recording to stop.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            if(mMediaRecorder != null && isRecording){
-                mMediaRecorder.stop();
-                mMediaRecorder.release();
-                mMediaRecorder = null;
-                isRecording = false;
-                Toast.makeText(this,
-                        "Recording saved",
-                        Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this,
-                    "Error stopping recording: " + e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
-            }
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopLocationUpdates();
-        stopRecordingCall();
+
+        if (telephonyManager != null && phoneStateListener != null) {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
     }
 
 
