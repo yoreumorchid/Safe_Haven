@@ -68,9 +68,6 @@ public class CallingActivity extends AppCompatActivity {
                 super.onCallStateChanged(state, phoneNumber);
                 if(state == TelephonyManager.CALL_STATE_IDLE) {
                     stopLocationUpdates();
-                    Toast.makeText(CallingActivity.this,
-                            "电话已挂断，位置分享已停止。",
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -135,6 +132,7 @@ public class CallingActivity extends AppCompatActivity {
     }
 
     // Location sharing
+    // After make the emergency call, user needs to back to the CallingActivity to share location
     private void initializeLocationSharing() {
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mHandler = new Handler();
