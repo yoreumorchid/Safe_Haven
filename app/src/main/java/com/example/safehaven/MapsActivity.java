@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MessageActivity extends AppCompatActivity {
+public class MapsActivity extends AppCompatActivity {
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
     private FirebaseAuth auth;
@@ -35,7 +35,7 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
+        setContentView(R.layout.activity_maps);
 
         auth = FirebaseAuth.getInstance();
         String userID = auth.getCurrentUser().getUid();
@@ -59,7 +59,7 @@ public class MessageActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MessageActivity.this,
+                Toast.makeText(MapsActivity.this,
                         "Failed to load contacts",
                         Toast.LENGTH_SHORT).show();
             }

@@ -22,7 +22,7 @@
             android:name=".UpdateEmailActivity"
             android:exported="false" />
         <activity
-            android:name=".MessageActivity"
+            android:name=".MapsActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"

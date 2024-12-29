@@ -54,7 +54,7 @@ public class  MainActivity extends AppCompatActivity {
         emergencyMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigateToActivity(MessageActivity.class);
+                navigateToActivity(MapsActivity.class);
             }
         });
 
