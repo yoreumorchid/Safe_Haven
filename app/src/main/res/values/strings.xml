@@ -37,17 +37,6 @@
     <string name="prompt_phone_number">Enter your Phone Number</string>
     <string name="gender_female">Female</string>
     <string name="gender_male">Male</string>
-    <string-array name="blood_groups">
-        <item>Select Blood Group</item>
-        <item>A+</item>
-        <item>A-</item>
-        <item>B+</item>
-        <item>B-</item>
-        <item>O+</item>
-        <item>O-</item>
-        <item>AB+</item>
-        <item>AB-</item>
-    </string-array>
 
     <!-- Location Sharing Page -->
     <string name="track_location">Click to Track Real-Time Location</string>

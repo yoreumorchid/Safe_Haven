@@ -1,15 +1,14 @@
 package com.example.safehaven;
 
 public class UserData {
-    public String name, email, password, phoneNumber, bloodType, gender;
+    public String name, email, password, phoneNumber, gender;
 
     // Full parameter constructor
-    public UserData(String name, String email, String password, String phoneNumber, String bloodType, String gender) {
+    public UserData(String name, String email, String password, String phoneNumber, String gender) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.bloodType = bloodType;
         this.gender = gender;
     }
 
@@ -48,14 +47,6 @@ public class UserData {
 
     public void setPhone(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getBloodType() {
-        return bloodType;
-    }
-
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
     }
 
     public String getGender() {

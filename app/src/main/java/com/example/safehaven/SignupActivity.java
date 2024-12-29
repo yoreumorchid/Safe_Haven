@@ -8,9 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText name, email, password, confirmPassword, phoneNumber;
-    private Spinner bloodType;
     private RadioGroup genderGroup;
     private FirebaseAuth auth;
 
@@ -40,7 +37,6 @@ public class SignupActivity extends AppCompatActivity {
         password = findViewById(R.id.EtPassword);
         confirmPassword = findViewById(R.id.EtConfirmPswd_SignUp);
         phoneNumber = findViewById(R.id.EtPhoneNum);
-        bloodType = findViewById(R.id.SpnBloodType);
         genderGroup = findViewById(R.id.RgGender);
         Button signUp = findViewById(R.id.BtnSignUp);
 
@@ -64,13 +60,11 @@ public class SignupActivity extends AppCompatActivity {
                 ? "Male"
                 : "Female";
 
-        String bloodGroup = bloodType.getSelectedItem().toString();
         return new UserData(
                 name.getText().toString().trim(),
                 email.getText().toString().trim(),
                 password.getText().toString().trim(),
                 phoneNumber.getText().toString().trim(),
-                bloodGroup,
                 gender
         );
     }
@@ -83,11 +77,6 @@ public class SignupActivity extends AppCompatActivity {
         if (!validateField(userData.password, password, "Please Enter your Password")) isValid = false;
         if (!validateField(confirmPasswordInput, confirmPassword, "Please Confirm your Password")) isValid = false;
         if (!validateField(userData.phoneNumber, phoneNumber, "Please Enter your Phone Number")) isValid = false;
-
-        if (userData.bloodType.equals("Select Blood Group")) {
-            Toast.makeText(this, "Please Select your Blood Group", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
 
         if (!userData.password.equals(confirmPasswordInput)) {
             confirmPassword.setError("Passwords do not match");

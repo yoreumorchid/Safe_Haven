@@ -87,33 +87,14 @@
         app:layout_constraintStart_toEndOf="@+id/IvPhoneNum"
         app:layout_constraintTop_toTopOf="@+id/IvPhoneNum" />
 
-    <ImageView
-        android:id="@+id/IvBloodType"
-        android:layout_width="26dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_bloodtype_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IvPhoneNum" />
-
-    <Spinner
-        android:id="@+id/SpnBloodType"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="24dp"
-        android:entries="@array/blood_groups"
-        app:layout_constraintStart_toEndOf="@+id/IvBloodType"
-        app:layout_constraintTop_toTopOf="@+id/IvBloodType" />
-
     <RadioButton
         android:id="@+id/RbMale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/gender_male"
-        app:layout_constraintStart_toStartOf="@+id/SpnBloodType"
-        app:layout_constraintTop_toBottomOf="@+id/SpnBloodType" />
+        app:layout_constraintTop_toBottomOf="@+id/EtPhoneNum"
+        tools:layout_editor_absoluteX="98dp" />
 
     <RadioButton
         android:id="@+id/RbFemale"

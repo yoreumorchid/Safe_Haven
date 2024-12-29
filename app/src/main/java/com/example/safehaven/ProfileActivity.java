@@ -29,7 +29,6 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView email;
     private EditText name;
     private EditText phoneNumber;
-    private Spinner bloodTypeSpinner;
     private RadioButton maleRadio, femaleRadio;
     private Button edit;
     private Button saveChanges;
@@ -39,7 +38,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private String userID;
-    private String selectedBloodType;
     private String selectedGender;
     private String currentPassword;
 
@@ -52,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
         name = findViewById(R.id.EtName);
         email = findViewById(R.id.TvEmail);
         phoneNumber = findViewById(R.id.EtPhoneNum);
-        bloodTypeSpinner = findViewById(R.id.SpnBloodType);
         maleRadio = findViewById(R.id.RbMale);
         femaleRadio = findViewById(R.id.RbFemale);
         saveChanges = findViewById(R.id.BtnSaveChanges);
@@ -76,8 +73,6 @@ public class ProfileActivity extends AppCompatActivity {
                     name.setText(userProfile.name);
                     email.setText(userProfile.email);
                     phoneNumber.setText(userProfile.phoneNumber);
-                    int position = getPositionFromEntries(userProfile.bloodType);
-                    bloodTypeSpinner.setSelection(position);
                     if(userProfile.gender.equalsIgnoreCase("Male")) {
                         maleRadio.setChecked(true);
                     } else if(userProfile.gender.equalsIgnoreCase("Female")) {
@@ -101,7 +96,6 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 name.setEnabled(true);
                 phoneNumber.setEnabled(true);
-                bloodTypeSpinner.setEnabled(true);
                 maleRadio.setEnabled(true);
                 femaleRadio.setEnabled(true);
                 saveChanges.setVisibility(View.VISIBLE);
@@ -113,7 +107,6 @@ public class ProfileActivity extends AppCompatActivity {
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedBloodType = bloodTypeSpinner.getSelectedItem().toString();
                 selectedGender = maleRadio.isChecked()
                         ? "Male"
                         : femaleRadio.isChecked()
@@ -127,7 +120,6 @@ public class ProfileActivity extends AppCompatActivity {
                         email.getText().toString().trim(),
                         currentPassword,
                         updated_phoneNumber,
-                        selectedBloodType,
                         selectedGender
                 );
                 reference.child(userID).setValue(updatedUserProfile).addOnCompleteListener(task -> {
@@ -181,19 +173,9 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private int getPositionFromEntries(String bloodType) {
-        String[] bloodGroups = getResources().getStringArray(R.array.blood_groups);
-        for (int i = 0; i < bloodGroups.length; i++) {
-            if (bloodGroups[i].equals(bloodType)) {
-                return i;
-            }
-        }
-        return 0;
-    }
     private void disableEditing() {
         name.setEnabled(false);
         phoneNumber.setEnabled(false);
-        bloodTypeSpinner.setEnabled(false);
         maleRadio.setEnabled(false);
         femaleRadio.setEnabled(false);
         saveChanges.setVisibility(View.GONE);
