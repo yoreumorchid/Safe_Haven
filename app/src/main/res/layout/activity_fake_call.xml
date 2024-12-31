@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_color"
+    tools:context=".FakeCallActivity">
+
+    <RadioGroup
+        android:id="@+id/Rg_voice_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IvMale">
+
+        <RadioButton
+            android:id="@+id/Rb_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:text="Male Voice"
+            android:textSize="24sp" />
+
+        <RadioButton
+            android:id="@+id/Rb_Female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female Voice"
+            android:textSize="24sp" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_select_voice"
+        android:layout_width="0dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="96dp"
+        android:fontFamily="@font/amaranth_bold_italic"
+        android:gravity="center"
+        android:text="Select Voice Type When Receive the Dial"
+        android:textColor="#161111"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/IvMale"
+        android:layout_width="170dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.149"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_select_voice"
+        app:srcCompat="@drawable/ic_male" />
+
+    <ImageView
+        android:id="@+id/IvFemale"
+        android:layout_width="170dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_select_voice"
+        app:srcCompat="@drawable/ic_female" />
+
+    <Switch
+        android:id="@+id/SWHaptics"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/amaranth_bold_italic"
+        android:showText="false"
+        android:text="Do you want to turn on the haptics?     "
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Rg_voice_selection" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

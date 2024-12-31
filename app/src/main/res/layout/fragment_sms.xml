@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DDE6F2"
+    android:backgroundTint="#D9C9E9"
+    tools:context=".SMSFragment">
+
+    <ToggleButton
+        android:id="@+id/toggle"
+        android:layout_width="70dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:text="ToggleButton"
+        android:textColor="#FBF8F8"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/IV_Backgroumd"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="@+id/IV_Backgroumd"
+        app:layout_constraintTop_toTopOf="@+id/IV_Backgroumd" />
+
+    <ImageView
+        android:id="@+id/IV_Backgroumd"
+        android:layout_width="374dp"
+        android:layout_height="87dp"
+        android:layout_marginTop="732dp"
+        android:src="@drawable/radiusbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.432"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="412dp"
+        android:layout_height="947dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+         <fragment
+            android:id="@+id/SMSFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="638dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp" />
+
+        <TextView
+            android:id="@+id/TVShowLocarion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="100dp"
+            android:fontFamily="@font/amaranth_bold_italic"
+            android:text="Show Location"
+            android:textColor="#F0F0F0"
+            android:textSize="34sp" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

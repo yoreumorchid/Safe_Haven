@@ -11,9 +11,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class  MainActivity extends AppCompatActivity {
-    private Button profile, addContacts, emergencyCall;
+    private Button profile, addContacts, emergencyCall, quickAlert, fakeDial;
     private ImageView emergencyMsg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,8 @@ public class  MainActivity extends AppCompatActivity {
         addContacts = findViewById(R.id.BtnContacts);
         emergencyMsg = findViewById(R.id.IvMessage);
         emergencyCall = findViewById(R.id.BtnEmergencyCall);
+        quickAlert = findViewById(R.id.BtnAlert);
+        fakeDial = findViewById(R.id.BtnDial);
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,10 +59,23 @@ public class  MainActivity extends AppCompatActivity {
         emergencyMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigateToActivity(MapsActivity.class);
+                navigateToFragment(new SMSFragment());
             }
         });
 
+        quickAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToActivity(QuickAlertActivity.class);
+            }
+        });
+
+        fakeDial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToActivity(FakeCallActivity.class);
+            }
+        });
     }
 
     private void navigateToActivity(Class<?> targetActivity) {
@@ -65,6 +83,18 @@ public class  MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, targetActivity));
         } catch (Exception e) {
             Toast.makeText(MainActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void navigateToFragment(Fragment targetFragment) {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, targetFragment);
+            fragmentTransaction.addToBackStack(null); // Optional
+            fragmentTransaction.commit();
+        } catch (Exception e) {
+            Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -57,7 +57,7 @@
 
     <EditText
         android:id="@+id/EtName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
         android:contentDescription="Name"
@@ -78,7 +78,7 @@
 
     <EditText
         android:id="@+id/EtPhoneNum"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
         android:contentDescription="Phone Number"
@@ -87,22 +87,29 @@
         app:layout_constraintStart_toEndOf="@+id/IvPhoneNum"
         app:layout_constraintTop_toTopOf="@+id/IvPhoneNum" />
 
-    <RadioButton
-        android:id="@+id/RbMale"
+    <RadioGroup
+        android:id="@+id/RgGender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/gender_male"
-        app:layout_constraintTop_toBottomOf="@+id/EtPhoneNum"
-        tools:layout_editor_absoluteX="98dp" />
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EtPhoneNum">
 
-    <RadioButton
-        android:id="@+id/RbFemale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/gender_female"
-        app:layout_constraintEnd_toEndOf="@+id/EtPhoneNum"
-        app:layout_constraintTop_toTopOf="@+id/RbMale" />
+        <RadioButton
+            android:id="@+id/RbMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:text="@string/gender_male" />
+
+        <RadioButton
+            android:id="@+id/RbFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gender_female" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/BtnUpdateEmail"
@@ -120,12 +127,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:text="Reset Password"
         app:layout_constraintEnd_toStartOf="@+id/BtnUpdateEmail"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RbMale" />
+        app:layout_constraintTop_toBottomOf="@+id/RgGender" />
 
     <Button
         android:id="@+id/BtnSaveChanges"

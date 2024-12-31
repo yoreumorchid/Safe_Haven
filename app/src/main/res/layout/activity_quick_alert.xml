@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_color"
+    tools:context=".QuickAlertActivity">
+
+    <!-- Flashlight SOS Signal Button -->
+
+    <!-- Loud Siren Playback Button -->
+
+    <!-- One-Click Activation Button -->
+
+    <Button
+        android:id="@+id/BtnLoudSiren"
+        android:layout_width="0dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="Loud Siren"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:icon="@drawable/ic_siren"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/BtnFlashLight" />
+
+    <Button
+        android:id="@+id/BtnTrigger"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/button_color"
+        android:text="Emergency Trigger"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVReminder4"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <Button
+        android:id="@+id/BtnFlashLight"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/agbalumo"
+        android:text="Flashlight"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:icon="@drawable/ic_flashlight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVReminder3" />
+
+    <EditText
+        android:id="@+id/TVNotice"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:fontFamily="@font/angkor"
+        android:gravity="center"
+        android:inputType="text"
+        android:text="Attention !!!"
+        android:textColor="#E26D48"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TVReminder1"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:text="Use the flashlight and siren responsibly in emergency situations only. "
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVNotice" />
+
+    <TextView
+        android:id="@+id/TVReminder3"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Ensure your safety and avoid misuse. "
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVReminder1" />
+
+    <TextView
+        android:id="@+id/TVReminder4"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="Trigger flashlight and siren together for quick emergency response."
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BtnLoudSiren" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

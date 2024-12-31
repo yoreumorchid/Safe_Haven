@@ -35,6 +35,8 @@ public class CallingActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference contactsReference;
     private String emergencyContact1;
+    // First Location Update Flag
+    private boolean isFirstLocationUpdate = true;
 
     // Location sharing
     private Switch locationSharing;
@@ -72,9 +74,18 @@ public class CallingActivity extends AppCompatActivity {
             }
         };
 
-        if (telephonyManager != null) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        } else {
+            Toast.makeText(this, "READ_PHONE_STATE permission is required for call state listening.", Toast.LENGTH_SHORT).show();
         }
+        try {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to register phone state listener: Permission denied.", Toast.LENGTH_SHORT).show();
+        }
+
 
         // Load emergency contact
         auth = FirebaseAuth.getInstance();
@@ -141,35 +152,50 @@ public class CallingActivity extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 currentLocationMessage = "I need help! My current location is: "
                         + "http://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
-            }
-        };
 
-        locationUpdateTask = new Runnable() {
-            @Override
-            public void run() {
-                if(emergencyContact1 != null) {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(emergencyContact1, null, currentLocationMessage, null, null);
-                    Toast.makeText(CallingActivity.this,
-                            "Location shared.",
-                            Toast.LENGTH_SHORT).show();
+                if (isFirstLocationUpdate) {
+                    isFirstLocationUpdate = false;
+                    startLocationUpdatesTask();
                 }
-                mHandler.postDelayed(this, UPDATE_INTERVAL);
             }
         };
     }
 
     private void startLocationUpdates() {
         try {
+            Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (lastKnownLocation != null) {
+                currentLocationMessage = "I need help! My current location is: "
+                        + "http://maps.google.com/?q=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
+                isFirstLocationUpdate = false;
+                startLocationUpdatesTask();
+            }
+
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     UPDATE_INTERVAL,
                     MIN_DISTANCE,
                     mLocationListener);
-            mHandler.post(locationUpdateTask);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
+
+    private void startLocationUpdatesTask() {
+        locationUpdateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (emergencyContact1 != null && !currentLocationMessage.equals("Location unavailable.")) {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(emergencyContact1, null, currentLocationMessage, null, null);
+                    Toast.makeText(CallingActivity.this, "Location shared.", Toast.LENGTH_SHORT).show();
+                }
+                mHandler.postDelayed(this, UPDATE_INTERVAL);
+            }
+        };
+        // 5 secs delay for first message
+        mHandler.postDelayed(locationUpdateTask, 5000);
+    }
+
 
     private void stopLocationUpdates() {
         if (mLocationManager != null && mLocationListener != null) {
@@ -208,19 +234,23 @@ public class CallingActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE) {
+            boolean allGranted = true;
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this,
-                            "All permissions are required to proceed!",
-                            Toast.LENGTH_SHORT).show();
-                    return;
+                    allGranted = false;
+                    break;
                 }
             }
-            Toast.makeText(this,
-                    "Permissions granted!",
-                    Toast.LENGTH_SHORT).show();
+
+            if (allGranted) {
+                Toast.makeText(this, "All permissions granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permissions denied. Cannot proceed", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
+
 
     private void makeEmergencyCall() {
         if (emergencyContact1 != null && !emergencyContact1.isEmpty()) {

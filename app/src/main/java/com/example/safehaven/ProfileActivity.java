@@ -3,11 +3,10 @@ package com.example.safehaven;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Spinner;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView email;
     private EditText name;
     private EditText phoneNumber;
-    private RadioButton maleRadio, femaleRadio;
+    private RadioGroup genderGroup;
     private Button edit;
     private Button saveChanges;
     private Button logout;
@@ -50,8 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         name = findViewById(R.id.EtName);
         email = findViewById(R.id.TvEmail);
         phoneNumber = findViewById(R.id.EtPhoneNum);
-        maleRadio = findViewById(R.id.RbMale);
-        femaleRadio = findViewById(R.id.RbFemale);
+        genderGroup = findViewById(R.id.RgGender);
         saveChanges = findViewById(R.id.BtnSaveChanges);
         resetPassword = findViewById(R.id.BtnResetPassword);
         updateEmail = findViewById(R.id.BtnUpdateEmail);
@@ -74,9 +72,9 @@ public class ProfileActivity extends AppCompatActivity {
                     email.setText(userProfile.email);
                     phoneNumber.setText(userProfile.phoneNumber);
                     if(userProfile.gender.equalsIgnoreCase("Male")) {
-                        maleRadio.setChecked(true);
+                        genderGroup.check(R.id.RbMale);
                     } else if(userProfile.gender.equalsIgnoreCase("Female")) {
-                        femaleRadio.setChecked(true);
+                        genderGroup.check(R.id.RbFemale);
                     }
                     currentPassword = userProfile.getPassword();
                 }
@@ -96,8 +94,9 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 name.setEnabled(true);
                 phoneNumber.setEnabled(true);
-                maleRadio.setEnabled(true);
-                femaleRadio.setEnabled(true);
+                for (int i = 0; i < genderGroup.getChildCount(); i++) {
+                    genderGroup.getChildAt(i).setEnabled(true);
+                }
                 saveChanges.setVisibility(View.VISIBLE);
                 name.requestFocus();
             }
@@ -107,11 +106,8 @@ public class ProfileActivity extends AppCompatActivity {
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedGender = maleRadio.isChecked()
-                        ? "Male"
-                        : femaleRadio.isChecked()
-                        ? "Female"
-                        : "Not Available";
+                int selectedId = genderGroup.getCheckedRadioButtonId();
+                String selectedGender = selectedId == R.id.RbMale ? "Male" : "Female";
 
                 // Update user information
                 String updated_name = name.getText().toString().trim();
@@ -176,8 +172,9 @@ public class ProfileActivity extends AppCompatActivity {
     private void disableEditing() {
         name.setEnabled(false);
         phoneNumber.setEnabled(false);
-        maleRadio.setEnabled(false);
-        femaleRadio.setEnabled(false);
+        for (int i = 0; i < genderGroup.getChildCount(); i++) {
+            genderGroup.getChildAt(i).setEnabled(false);
+        }
         saveChanges.setVisibility(View.GONE);
     }
 

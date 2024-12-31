@@ -17,7 +17,7 @@
     <string name="call_switch_location">Share Real-Time Location</string>
     <string name="call_switch_record">Record Call</string>
     Automatically share your live location via SMS with emergency contacts.
-    <string name="call_text_location">Automatically share your live location via SMS with emergency contacts.</string>
+    <string name="call_text_location">Automatically share your live location via SMS with emergency contacts. To use this, YOU NEED TO GO BACK TO SAFE HAVEN AFTER CALL.</string>
     <string name="call_text_record">Automatically record the call for future reference.</string>
 
     <!-- Profile Page -->
@@ -46,5 +46,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

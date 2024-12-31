@@ -21,8 +21,6 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/IvMessage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/IvMessage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -37,10 +35,12 @@
 
     <Button
         android:id="@+id/BtnContacts"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
         android:drawableLeft="@drawable/ic_baseline_person_add_alt_24"
         android:drawablePadding="10sp"
         android:paddingHorizontal="50sp"
@@ -53,20 +53,71 @@
 
     <Button
         android:id="@+id/BtnEmergencyCall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="49dp"
         android:layout_centerHorizontal="true"
 
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:drawableLeft="@drawable/ic_call_24"
         android:drawablePadding="10sp"
+
         android:paddingHorizontal="50sp"
         android:paddingVertical="10sp"
-
         android:text="Emergency Call"
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BtnContacts" />
+
+    <Button
+        android:id="@+id/BtnDial"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:drawableLeft="@drawable/ic_alert"
+        android:drawablePadding="10sp"
+        android:paddingHorizontal="50sp"
+        android:paddingVertical="10sp"
+        android:text="Fake Dial"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/ic_dial"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BtnAlert" />
+
+    <Button
+        android:id="@+id/BtnAlert"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:drawableLeft="@drawable/ic_alert"
+        android:drawablePadding="10sp"
+        android:paddingHorizontal="50sp"
+        android:paddingVertical="10sp"
+        android:text="Quick Alert"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BtnEmergencyCall" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/BtnContacts"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
