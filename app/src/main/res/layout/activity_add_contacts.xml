@@ -27,6 +27,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="128dp"
       android:text="Contacts"
+      android:textColor="@color/black"
       android:textSize="34sp"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="parent"

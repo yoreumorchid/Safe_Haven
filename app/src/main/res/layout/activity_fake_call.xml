@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="48dp"
             android:text="Male Voice"
+            android:textColor="@color/black"
             android:textSize="24sp" />
 
         <RadioButton
@@ -32,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Female Voice"
+            android:textColor="@color/black"
             android:textSize="24sp" />
     </RadioGroup>
 
@@ -79,6 +81,7 @@
         android:fontFamily="@font/amaranth_bold_italic"
         android:showText="false"
         android:text="Do you want to turn on the haptics?     "
+        android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

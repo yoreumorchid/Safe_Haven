@@ -14,6 +14,7 @@
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-black"
         android:text="Name"
+        android:textColor="@color/black"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,10 +24,10 @@
         android:id="@+id/TvOldEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="@string/label_old_email"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +39,9 @@
         android:layout_height="@dimen/edit_text_height"
         android:hint="@string/prompt_old_email"
         android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TvOldEmail" />
 
     <TextView
@@ -49,6 +51,7 @@
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="@string/label_new_email"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,8 +63,9 @@
         android:layout_height="@dimen/edit_text_height"
         android:hint="@string/prompt_new_email"
         android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TvNewEmail" />
 
     <TextView
@@ -71,6 +75,7 @@
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="@string/label_password"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,13 +85,13 @@
         android:id="@+id/EtPassword"
         android:layout_width="0dp"
         android:layout_height="64dp"
+        android:autofillHints="password"
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
-        android:autofillHints="password"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TvPassword"
-         />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TvPassword" />
 
     <Button
         android:id="@+id/BtnUpdateEmailConfirm"
