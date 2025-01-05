@@ -274,6 +274,12 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(CallingActivity.this, MainActivity.class));
+        finish();
+    }
 
 
 }

@@ -15,10 +15,9 @@
     <string name="call_instruction">Just hold the button to call. Safe Haven will call your first emergency contact.
         Pressing emergency call will enable real-time location sharing and call recording. Both can be manually switched off.</string>
     <string name="call_switch_location">Share Real-Time Location</string>
-    <string name="call_switch_record">Record Call</string>
     Automatically share your live location via SMS with emergency contacts.
-    <string name="call_text_location">Automatically share your live location via SMS with emergency contacts. To use this, YOU NEED TO GO BACK TO SAFE HAVEN AFTER CALL.</string>
-    <string name="call_text_record">Automatically record the call for future reference.</string>
+    <string name="call_text_location">Automatically share your live location via SMS with emergency contacts.
+        To use this, YOU NEED TO GO BACK TO SAFE HAVEN AFTER CALL.</string>
 
     <!-- Profile Page -->
     <string name="action_log_out">Log out</string>
@@ -40,13 +39,11 @@
 
     <!-- Location Sharing Page -->
     <string name="track_location">Click to Track Real-Time Location</string>
-    <string name="title_activity_maps">MapsActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+123
 
 </resources>
