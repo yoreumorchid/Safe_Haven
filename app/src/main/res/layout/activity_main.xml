@@ -14,13 +14,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="120dp"
         android:backgroundTint="@color/main_color"
         android:drawableTop="@drawable/ic_profile"
         android:text="Profile"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/IvMessage"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/BtnLogOut2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/main_color"
+        android:drawableTop="@drawable/ic_logout_24"
+        android:text="Log out"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

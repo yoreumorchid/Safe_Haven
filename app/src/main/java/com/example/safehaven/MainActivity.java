@@ -1,5 +1,6 @@
 package com.example.safehaven;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,8 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class  MainActivity extends AppCompatActivity {
-    private Button profile, addContacts, emergencyCall, quickAlert, fakeDial;
+    private Button profile, addContacts, emergencyCall, quickAlert, fakeDial, logout;
+    private FirebaseAuth auth;
     private ImageView emergencyMsg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class  MainActivity extends AppCompatActivity {
         emergencyCall = findViewById(R.id.BtnEmergencyCall);
         quickAlert = findViewById(R.id.BtnAlert);
         fakeDial = findViewById(R.id.BtnDial);
+        logout = findViewById(R.id.BtnLogOut2);
+        auth = FirebaseAuth.getInstance();
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +80,18 @@ public class  MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 navigateToActivity(FakeCallActivity.class);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                Toast.makeText(MainActivity.this,
+                        "Logout Successful",
+                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             }
         });
     }
