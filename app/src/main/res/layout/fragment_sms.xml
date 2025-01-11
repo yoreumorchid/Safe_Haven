@@ -12,8 +12,8 @@
     <fragment
         android:id="@+id/SMSFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_width="412dp"
+        android:layout_height="521dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,11 +33,12 @@
 
     <ImageView
         android:id="@+id/IV_Backgroumd"
-        android:layout_width="374dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="324dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/radiusbox"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SMSFragment" />
 
@@ -53,5 +54,18 @@
         android:textSize="34sp"
         app:layout_constraintStart_toStartOf="@+id/IV_Backgroumd"
         app:layout_constraintTop_toTopOf="@+id/IV_Backgroumd" />
+
+    <Button
+        android:id="@+id/btnViewLocationLogs"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:text="View Location Logs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVShowLocarion" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
