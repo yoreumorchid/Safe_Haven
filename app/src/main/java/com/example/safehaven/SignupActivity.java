@@ -192,11 +192,5 @@ public class SignupActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        navigateToLogin();
-    }
-
 
 }
