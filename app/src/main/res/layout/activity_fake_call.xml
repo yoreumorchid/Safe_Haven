@@ -41,15 +41,16 @@
         android:id="@+id/tv_select_voice"
         android:layout_width="0dp"
         android:layout_height="82dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/amaranth_bold_italic"
         android:gravity="center"
         android:text="Select Voice Type When Receive the Dial"
         android:textColor="#161111"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/TVTitle" />
 
     <ImageView
         android:id="@+id/IvMale"
@@ -74,17 +75,48 @@
         app:srcCompat="@drawable/ic_female" />
 
     <Switch
-        android:id="@+id/SWHaptics"
-        android:layout_width="wrap_content"
+        android:id="@+id/swVibration"
+        android:layout_width="378dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/amaranth_bold_italic"
+        android:text="Do you want to enable Vibration mode?"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swVoice" />
+
+    <Switch
+        android:id="@+id/swVoice"
+        android:layout_width="374dp"
         android:layout_height="64dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/amaranth_bold_italic"
         android:showText="false"
-        android:text="Do you want to turn on the haptics?     "
+        android:text="Do you want to start a fake call?     "
         android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Rg_voice_selection" />
+
+    <EditText
+        android:id="@+id/TVTitle"
+        android:layout_width="392dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="text"
+        android:text="Incoming Call..."
+        android:textColor="#E26D48"
+        android:textColorLink="#E26D48"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.21"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

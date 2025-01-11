@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
-        android:id="@+id/toggle"
+        android:id="@+id/TbLocationSharing"
         android:layout_width="70dp"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"

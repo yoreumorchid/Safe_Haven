@@ -1,6 +1,7 @@
 package com.example.safehaven;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -157,12 +158,14 @@ public class ProfileActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                auth.signOut();
-                Toast.makeText(ProfileActivity.this,
-                        "Logout Successful",
-                        Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
-                finish();
+                // Clear login status in SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLoggedIn", false);  // Set it to 'false' when logged out
+                editor.apply();  // Apply the changes
+
+                // Navigate back to LoginActivity
+                navigateToActivity(LoginActivity.class);
             }
         });
     }
@@ -174,6 +177,14 @@ public class ProfileActivity extends AppCompatActivity {
             genderGroup.getChildAt(i).setEnabled(false);
         }
         saveChanges.setVisibility(View.GONE);
+    }
+
+    private void navigateToActivity(Class<?> targetActivity) {
+        try {
+            startActivity(new Intent(ProfileActivity.this, targetActivity));
+        } catch (Exception e) {
+            Toast.makeText(ProfileActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
