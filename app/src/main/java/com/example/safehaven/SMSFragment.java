@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,14 +48,20 @@ public class SMSFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
     private Marker currentMarker;
+    private Handler mHandler;
+    private Runnable locationUpdateTask;
+    private ToggleButton locationSharingToggle;
     private FirebaseAuth auth;
     private DatabaseReference locationLogsReference;
-    private ToggleButton locationSharingToggle;
-    private static final long UPDATE_INTERVAL = 30000; // 30秒更新一次位置
+    private DatabaseReference contactsReference;
+    private String emergencyContact1;
+    private String currentLocationMessage = "Location unavailable.";
+    private boolean isMapReady = false;
+    private boolean shouldZoomOnMapReady = false;
+    private static final long UPDATE_INTERVAL = 30000;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     public SMSFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -66,7 +73,6 @@ public class SMSFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize Map
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.SMSFragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
@@ -75,9 +81,10 @@ public class SMSFragment extends Fragment implements OnMapReadyCallback {
         auth = FirebaseAuth.getInstance();
         String userID = auth.getCurrentUser().getUid();
         locationLogsReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("LocationLogs");
+        contactsReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("Contacts");
 
-        // Initialise Location Manager
         mLocationManager = (LocationManager) requireContext().getSystemService(getContext().LOCATION_SERVICE);
+        mHandler = new Handler();
 
         mLocationListener = new LocationListener() {
             @Override
@@ -86,29 +93,50 @@ public class SMSFragment extends Fragment implements OnMapReadyCallback {
                 String longitude = String.valueOf(location.getLongitude());
                 String timestamp = String.valueOf(System.currentTimeMillis());
 
-                // create Map
+                currentLocationMessage = "I need help! My location is: " +
+                        "http://maps.google.com/?q=" + latitude + "," + longitude;
+
+                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if (gMap != null && isMapReady) {
+                    if (currentMarker != null) {
+                        currentMarker.setPosition(currentLocation);
+                    } else {
+                        currentMarker = gMap.addMarker(new MarkerOptions().position(currentLocation).title("My Location"));
+                    }
+                    gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                } else {
+                    shouldZoomOnMapReady = true;
+                }
+
                 Map<String, String> locationData = new HashMap<>();
                 locationData.put("latitude", latitude);
                 locationData.put("longitude", longitude);
                 locationData.put("timestamp", timestamp);
-
-                // save to Firebase LocationLogs node
                 locationLogsReference.push().setValue(locationData)
                         .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), "Location successfully recorded! Recording every 30 seconds.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Location successfully recorded!", Toast.LENGTH_SHORT).show();
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(getContext(), "Failed to record location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
+
+                if (emergencyContact1 != null) {
+                    try {
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(emergencyContact1, null, currentLocationMessage, null, null);
+                        Toast.makeText(getContext(), "Location shared via SMS", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Failed to send SMS: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         };
-
 
         locationSharingToggle = view.findViewById(R.id.TbLocationSharing);
         locationSharingToggle.setChecked(false);
         locationSharingToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                if (hasAllPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION})) {
+                if (hasAllPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.SEND_SMS})) {
                     startLocationUpdates();
                 } else {
                     locationSharingToggle.setChecked(false);
@@ -121,22 +149,69 @@ public class SMSFragment extends Fragment implements OnMapReadyCallback {
 
         Button viewLocationLogsButton = view.findViewById(R.id.btnViewLocationLogs);
         viewLocationLogsButton.setOnClickListener(v -> showLocationLogsDialog());
+
+        contactsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Contacts contacts = snapshot.getValue(Contacts.class);
+                if (contacts != null && contacts.contact1 != null && !contacts.contact1.isEmpty()) {
+                    emergencyContact1 = contacts.contact1.trim();
+                } else {
+                    Toast.makeText(getContext(), "No emergency contact found", Toast.LENGTH_SHORT).show();
+                    emergencyContact1 = null;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load emergency contact", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
+        isMapReady = true;
+        if (shouldZoomOnMapReady && currentMarker != null) {
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMarker.getPosition(), 15));
+            shouldZoomOnMapReady = false;
+        }
     }
 
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UPDATE_INTERVAL, 0, mLocationListener);
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "Location permission is required", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (lastKnownLocation != null) {
+            LatLng currentLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            currentLocationMessage = "I need help! My location is: " +
+                    "http://maps.google.com/?q=" + currentLocation.latitude + "," + currentLocation.longitude;
+
+            if (gMap != null && isMapReady) {
+                if (currentMarker != null) {
+                    currentMarker.setPosition(currentLocation);
+                } else {
+                    currentMarker = gMap.addMarker(new MarkerOptions().position(currentLocation).title("My Location"));
+                }
+                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            } else {
+                shouldZoomOnMapReady = true;
+            }
+        }
+
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UPDATE_INTERVAL, 0, mLocationListener);
     }
 
     private void stopLocationUpdates() {
         if (mLocationManager != null && mLocationListener != null) {
             mLocationManager.removeUpdates(mLocationListener);
+        }
+        if (mHandler != null && locationUpdateTask != null) {
+            mHandler.removeCallbacks(locationUpdateTask);
         }
     }
 
@@ -183,7 +258,7 @@ public class SMSFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void requestPermissionsIfNeeded() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.SEND_SMS};
         if (!hasAllPermissions(permissions)) {
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
         }
