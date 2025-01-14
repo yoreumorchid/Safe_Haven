@@ -113,7 +113,7 @@ public class SignupActivity extends AppCompatActivity {
         return phoneNumber.matches("01\\d{8,9}");
     }
 
-        private void signUpUser(UserData userData) {
+    private void signUpUser(UserData userData) {
         String hashedPassword = hashPassword(userData.password);
         if (hashedPassword == null) {
             Toast.makeText(this, "Password hashing failed.", Toast.LENGTH_SHORT).show();

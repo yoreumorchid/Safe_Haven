@@ -20,8 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -66,13 +67,13 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 UserData userProfile = snapshot.getValue(UserData.class);
-                if(userProfile != null) {
+                if (userProfile != null) {
                     name.setText(userProfile.name);
                     email.setText(userProfile.email);
                     phoneNumber.setText(userProfile.phoneNumber);
-                    if(userProfile.gender.equalsIgnoreCase("Male")) {
+                    if (userProfile.gender.equalsIgnoreCase("Male")) {
                         genderGroup.check(R.id.RbMale);
-                    } else if(userProfile.gender.equalsIgnoreCase("Female")) {
+                    } else if (userProfile.gender.equalsIgnoreCase("Female")) {
                         genderGroup.check(R.id.RbFemale);
                     }
                     currentPassword = userProfile.getPassword();
@@ -81,108 +82,64 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ProfileActivity.this,
-                        "Failed to load profile data!",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "Failed to load profile data!", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Edit button listener
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                name.setEnabled(true);
-                phoneNumber.setEnabled(true);
-                for (int i = 0; i < genderGroup.getChildCount(); i++) {
-                    genderGroup.getChildAt(i).setEnabled(true);
-                }
-                saveChanges.setVisibility(View.VISIBLE);
-                name.requestFocus();
-            }
-        });
+        edit.setOnClickListener(v -> enableEditing());
 
         // Save changes button listener
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedId = genderGroup.getCheckedRadioButtonId();
-                String selectedGender = selectedId == R.id.RbMale ? "Male" : "Female";
+        saveChanges.setOnClickListener(v -> saveUserChanges());
 
-                // Update user information
-                String updated_name = name.getText().toString().trim();
+        resetPassword.setOnClickListener(v -> navigateToActivity(ForgotPasswordActivity.class));
+        updateEmail.setOnClickListener(v -> navigateToActivity(UpdateEmailActivity.class));
+        logout.setOnClickListener(v -> logoutUser());
+    }
 
-                // Validate Input
-                if(updated_name.isEmpty()) {
-                    Toast.makeText(ProfileActivity.this,
-                            "Name cannot be empty",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    private void saveUserChanges() {
+        String updatedName = name.getText().toString().trim();
+        String updatedPhoneNumber = phoneNumber.getText().toString().trim();
+        int selectedId = genderGroup.getCheckedRadioButtonId();
+        String selectedGender = selectedId == R.id.RbMale ? "Male" : "Female";
 
-                String updated_phoneNumber = phoneNumber.getText().toString().trim();
-                if(!isValidPhoneNumber(updated_phoneNumber)) {
-                    Toast.makeText(ProfileActivity.this,
-                            "Please enter a valid phone number",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                UserData updatedUserProfile = new UserData(updated_name,
-                        email.getText().toString().trim(),
-                        currentPassword,
-                        updated_phoneNumber,
-                        selectedGender
-                );
-                reference.child(userID).setValue(updatedUserProfile).addOnCompleteListener(task -> {
-                    if(task.isSuccessful()) {
-                        disableEditing();
-                        Toast.makeText(ProfileActivity.this,
-                                "Profile updated successfully!",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(e -> {
-                    disableEditing();
-                    Toast.makeText(ProfileActivity.this,
-                            "Something went wrong. Try again!",
-                            Toast.LENGTH_SHORT).show();
-                });
+        if (updatedName.isEmpty()) {
+            Toast.makeText(this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!isValidPhoneNumber(updatedPhoneNumber)) {
+            Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .child(userID);
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", updatedName);
+        updates.put("phoneNumber", updatedPhoneNumber);
+        updates.put("gender", selectedGender);
+
+        reference.updateChildren(updates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                disableEditing();
+                Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to update profile!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        resetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    startActivity(new Intent(ProfileActivity.this, ForgotPasswordActivity.class));
-                    finish();
-                } catch(Exception e) {
-                    Toast.makeText(ProfileActivity.this,
-                            "Something went wrong. Try again!",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        updateEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this, UpdateEmailActivity.class));
-                finish();
-            }
-        });
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Clear login status in SharedPreferences
-                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("isLoggedIn", false);  // Set it to 'false' when logged out
-                editor.apply();  // Apply the changes
-
-                // Navigate back to LoginActivity
-                navigateToActivity(LoginActivity.class);
-            }
-        });
+    private void enableEditing() {
+        name.setEnabled(true);
+        phoneNumber.setEnabled(true);
+        for (int i = 0; i < genderGroup.getChildCount(); i++) {
+            genderGroup.getChildAt(i).setEnabled(true);
+        }
+        saveChanges.setVisibility(View.VISIBLE);
+        name.requestFocus();
     }
 
     private void disableEditing() {
@@ -194,28 +151,23 @@ public class ProfileActivity extends AppCompatActivity {
         saveChanges.setVisibility(View.GONE);
     }
 
+    private void logoutUser() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        auth.signOut();
+        navigateToActivity(LoginActivity.class);
+        finish();
+    }
+
     private void navigateToActivity(Class<?> targetActivity) {
-        try {
-            startActivity(new Intent(ProfileActivity.this, targetActivity));
-        } catch (Exception e) {
-            Toast.makeText(ProfileActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
-        }
+        startActivity(new Intent(ProfileActivity.this, targetActivity));
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
         phoneNumber = phoneNumber.replaceAll("[\\s\\-()]", "");
         return phoneNumber.matches("01\\d{8,9}");
     }
-
-    @Override
-    public void onBackPressed() {
-        if (saveChanges.getVisibility() == View.VISIBLE) {
-            Toast.makeText(this, "Please save your changes before exiting!", Toast.LENGTH_SHORT).show();
-        } else {
-            super.onBackPressed();
-            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-            finish();
-        }
-    }
-
 }
