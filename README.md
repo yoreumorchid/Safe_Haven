@@ -17,6 +17,7 @@ Safe Haven is a personal safety application designed to empower users with quick
 - **Reset Password**: Users can change their password directly from their profile page.
 - **Send Password Reset Email**: Sends an email with a password reset link to the user’s registered email address.
 - **Update Email**: Enables users to update their email address.
+  
 
 ### **Emergency Tools**
 
