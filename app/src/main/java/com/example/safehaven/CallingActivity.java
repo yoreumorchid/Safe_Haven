@@ -223,23 +223,54 @@ public class CallingActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            List<String> deniedPermissions = new ArrayList<>();
+            boolean allGranted = true;
+            boolean shouldShowRationale = false;
+
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions.add(permissions[i]);
+                    allGranted = false;
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
+                        shouldShowRationale = true;
+                    }
                 }
             }
 
-            if (deniedPermissions.isEmpty()) {
+            if (allGranted) {
                 Toast.makeText(this, "All permissions granted", Toast.LENGTH_SHORT).show();
                 registerPhoneStateListener();
+            } else if (shouldShowRationale) {
+                showPermissionExplanationDialog();
             } else {
-                ActivityCompat.requestPermissions(this,
-                        deniedPermissions.toArray(new String[0]),
-                        PERMISSION_REQUEST_CODE);
+                showPermissionDeniedDialog();
             }
         }
     }
+
+    private void showPermissionExplanationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Permission Required")
+                .setMessage("This app requires permissions to function properly. Please grant the necessary permissions.")
+                .setPositiveButton("Retry", (dialog, which) -> checkAndRequestPermissions())
+                .setNegativeButton("Cancel", (dialog, which) -> finish())
+                .setCancelable(false)
+                .show();
+    }
+
+    private void showPermissionDeniedDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Permission Denied")
+                .setMessage("You have permanently denied some permissions. Please enable them in app settings or exit the app.")
+                .setPositiveButton("Open Settings", (dialog, which) -> {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Exit", (dialog, which) -> finish())
+                .setCancelable(false)
+                .show();
+    }
+
 
     private void makeEmergencyCall() {
         if (emergencyContact1 != null && !emergencyContact1.isEmpty()) {

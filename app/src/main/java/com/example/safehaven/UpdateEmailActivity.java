@@ -3,6 +3,7 @@ package com.example.safehaven;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,6 +77,9 @@ public class UpdateEmailActivity extends AppCompatActivity {
     private void updateEmail() {
         String oldEmail = etOldEmail.getText().toString().trim();
         String newEmail = etNewEmail.getText().toString().trim();
+        if(!Patterns.EMAIL_ADDRESS.matcher(oldEmail).matches() || !Patterns.EMAIL_ADDRESS.matcher(oldEmail).matches()) {
+            Toast.makeText(this, "Please enter correct email", Toast.LENGTH_SHORT).show();
+        }
         String password = etPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(oldEmail) || TextUtils.isEmpty(newEmail) || TextUtils.isEmpty(password)) {

@@ -1,6 +1,7 @@
 package com.example.safehaven;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,10 +101,10 @@ public class AddContactsActivity extends AppCompatActivity {
         String contact4Text = contact4.getText().toString().trim();
 
         // Validate input
-        if (contact1Text.isEmpty() && contact2Text.isEmpty()
-                && contact3Text.isEmpty() && contact4Text.isEmpty()) {
+        if (!isValidPhoneNumber(contact1Text) && !isValidPhoneNumber(contact2Text)
+                && !isValidPhoneNumber(contact3Text) && !isValidPhoneNumber(contact4Text)) {
             Toast.makeText(this,
-                    "Please enter at least one contact",
+                    "Please enter at least one valid phone number.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -126,6 +127,11 @@ public class AddContactsActivity extends AppCompatActivity {
                             "An error occurred: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 });
-
     }
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        phoneNumber = phoneNumber.replaceAll("[\\s\\-()]", "");
+        return phoneNumber.matches("01\\d{8,9}");
+    }
+
+
 }

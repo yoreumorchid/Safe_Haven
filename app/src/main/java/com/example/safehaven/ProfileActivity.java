@@ -110,7 +110,22 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // Update user information
                 String updated_name = name.getText().toString().trim();
+
+                // Validate Input
+                if(updated_name.isEmpty()) {
+                    Toast.makeText(ProfileActivity.this,
+                            "Name cannot be empty",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String updated_phoneNumber = phoneNumber.getText().toString().trim();
+                if(!isValidPhoneNumber(updated_phoneNumber)) {
+                    Toast.makeText(ProfileActivity.this,
+                            "Please enter a valid phone number",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 UserData updatedUserProfile = new UserData(updated_name,
                         email.getText().toString().trim(),
                         currentPassword,
@@ -185,6 +200,11 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(ProfileActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        phoneNumber = phoneNumber.replaceAll("[\\s\\-()]", "");
+        return phoneNumber.matches("01\\d{8,9}");
     }
 
     @Override
