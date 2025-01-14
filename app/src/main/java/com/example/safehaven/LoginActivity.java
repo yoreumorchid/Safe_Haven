@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,97 +26,85 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Check if the user is logged in
+        auth = FirebaseAuth.getInstance();
+
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-        Log.d("LoginStatus", "isLoggedIn: " + isLoggedIn);
 
-        if (isLoggedIn) {
+        // if logged in,go to MainActivity
+        if (isLoggedIn && auth.getCurrentUser() != null) {
+            Log.d("LoginActivity", "User is still logged in, navigating to MainActivity.");
             navigateTo(MainActivity.class);
             finish();
             return;
         }
 
-        // Initialize UI components
         email = findViewById(R.id.EtUsername);
         password = findViewById(R.id.EtPassword);
         login = findViewById(R.id.BtnLogin);
         forgotPassword = findViewById(R.id.TvForgotPassword);
         signup = findViewById(R.id.TvSignUp);
-        auth = FirebaseAuth.getInstance();
 
-        // Focus on the email field
-        email.requestFocus();
+        login.setOnClickListener(v -> {
+            String text_email = email.getText().toString().trim();
+            String text_password = password.getText().toString().trim();
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text_email = email.getText().toString().trim();
-                String text_password = password.getText().toString().trim();
-
-                if(validateLoginInput(text_email, text_password)) {
-                    loginUser(text_email, text_password);
-                }
+            if (validateLoginInput(text_email, text_password)) {
+                loginUser(text_email, text_password);
             }
         });
 
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateTo(SignupActivity.class);
-            }
-        });
+        signup.setOnClickListener(v -> navigateTo(SignupActivity.class));
 
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateTo(ForgotPasswordActivity.class);
-            }
-        });
+        forgotPassword.setOnClickListener(v -> navigateTo(ForgotPasswordActivity.class));
     }
 
-    // Validate user input
     private boolean validateLoginInput(String email, String password) {
-        if(TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(email)) {
             this.email.setError("Please enter your email address");
             return false;
         }
 
-        if(TextUtils.isEmpty(password)) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            this.email.setError("Please enter a valid email address");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(password)) {
             this.password.setError("Please enter your password");
+            return false;
+        }
+
+        if (password.length() < 6) {
+            this.password.setError("Password must be at least 6 characters");
             return false;
         }
 
         return true;
     }
 
-    // Login user with Firebase
     private void loginUser(String email, String password) {
         auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        // Save login status in SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLoggedIn", true);  // Store login status
-                        editor.apply();
+                .addOnSuccessListener(authResult -> {
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isLoggedIn", true);
+                    editor.apply();
 
-                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        navigateTo(MainActivity.class);
-                    }
+                    Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                    navigateTo(MainActivity.class);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LoginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e -> Toast.makeText(LoginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show());
     }
 
     private void navigateTo(Class<?> targetActivity) {
         Intent intent = new Intent(LoginActivity.this, targetActivity);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Please log in to continue.", Toast.LENGTH_SHORT).show();
     }
 }
