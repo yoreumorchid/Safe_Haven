@@ -29,13 +29,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CallingActivity extends AppCompatActivity {
     private ImageView emergencyCall;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private FirebaseAuth auth;
     private DatabaseReference contactsReference;
     private String emergencyContact1;
-    // First Location Update Flag
     private boolean isFirstLocationUpdate = true;
 
     // Location sharing
@@ -59,7 +61,6 @@ public class CallingActivity extends AppCompatActivity {
         emergencyCall = findViewById(R.id.IvCall);
         locationSharing = findViewById(R.id.SwLocShare);
 
-        // Set default states for the toggles
         locationSharing.setChecked(true);
 
         // Initialize Phone Listener
@@ -68,24 +69,11 @@ public class CallingActivity extends AppCompatActivity {
             @Override
             public void onCallStateChanged(int state, String phoneNumber) {
                 super.onCallStateChanged(state, phoneNumber);
-                if(state == TelephonyManager.CALL_STATE_IDLE) {
+                if (state == TelephonyManager.CALL_STATE_IDLE) {
                     stopLocationUpdates();
                 }
             }
         };
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        } else {
-            Toast.makeText(this, "READ_PHONE_STATE permission is required for call state listening.", Toast.LENGTH_SHORT).show();
-        }
-        try {
-            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to register phone state listener: Permission denied.", Toast.LENGTH_SHORT).show();
-        }
-
 
         // Load emergency contact
         auth = FirebaseAuth.getInstance();
@@ -102,18 +90,14 @@ public class CallingActivity extends AppCompatActivity {
                 if (contacts != null && contacts.contact1 != null && !contacts.contact1.isEmpty()) {
                     emergencyContact1 = contacts.contact1.trim();
                 } else {
-                    Toast.makeText(CallingActivity.this,
-                            "No emergency contact found",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CallingActivity.this, "No emergency contact found", Toast.LENGTH_SHORT).show();
                     emergencyContact1 = null;
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(CallingActivity.this,
-                        "Failed to load emergency contact",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(CallingActivity.this, "Failed to load emergency contact", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -126,24 +110,20 @@ public class CallingActivity extends AppCompatActivity {
         emergencyCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ActivityCompat.checkSelfPermission(CallingActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(CallingActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     makeEmergencyCall();
 
-                    if(locationSharing.isChecked()) {
+                    if (locationSharing.isChecked()) {
                         startLocationUpdates();
                     }
 
                 } else {
-                    Toast.makeText(CallingActivity.this,
-                            "Call permission is required to make emergency calls!",
-                            Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(CallingActivity.this, new String[]{Manifest.permission.CALL_PHONE}, PERMISSION_REQUEST_CODE);
                 }
             }
         });
     }
 
-    // Location sharing
-    // After make the emergency call, user needs to back to the CallingActivity to share location
     private void initializeLocationSharing() {
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mHandler = new Handler();
@@ -163,18 +143,22 @@ public class CallingActivity extends AppCompatActivity {
 
     private void startLocationUpdates() {
         try {
-            Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (lastKnownLocation != null) {
-                currentLocationMessage = "I need help! My current location is: "
-                        + "http://maps.google.com/?q=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
-                isFirstLocationUpdate = false;
-                startLocationUpdatesTask();
-            }
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (lastKnownLocation != null) {
+                    currentLocationMessage = "I need help! My current location is: "
+                            + "http://maps.google.com/?q=" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
+                    isFirstLocationUpdate = false;
+                    startLocationUpdatesTask();
+                }
 
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    UPDATE_INTERVAL,
-                    MIN_DISTANCE,
-                    mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        UPDATE_INTERVAL,
+                        MIN_DISTANCE,
+                        mLocationListener);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+            }
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -192,10 +176,8 @@ public class CallingActivity extends AppCompatActivity {
                 mHandler.postDelayed(this, UPDATE_INTERVAL);
             }
         };
-        // 5 secs delay for first message
         mHandler.postDelayed(locationUpdateTask, 5000);
     }
-
 
     private void stopLocationUpdates() {
         if (mLocationManager != null && mLocationListener != null) {
@@ -206,7 +188,6 @@ public class CallingActivity extends AppCompatActivity {
         }
     }
 
-    // Permission request
     private void checkAndRequestPermissions() {
         String[] requiredPermissions = {
                 Manifest.permission.CALL_PHONE,
@@ -215,52 +196,58 @@ public class CallingActivity extends AppCompatActivity {
                 Manifest.permission.READ_PHONE_STATE
         };
 
-        if (!hasAllPermissions(requiredPermissions)) {
-            // Request missing permissions
-            ActivityCompat.requestPermissions(this, requiredPermissions, PERMISSION_REQUEST_CODE);
+        List<String> missingPermissions = new ArrayList<>();
+        for (String permission : requiredPermissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(permission);
+            }
+        }
+
+        if (!missingPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    missingPermissions.toArray(new String[0]),
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            registerPhoneStateListener();
         }
     }
 
-    private boolean hasAllPermissions(String[] permissions) {
-        for (String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
+    private void registerPhoneStateListener() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         }
-        return true;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            boolean allGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
+            List<String> deniedPermissions = new ArrayList<>();
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permissions[i]);
                 }
             }
 
-            if (allGranted) {
+            if (deniedPermissions.isEmpty()) {
                 Toast.makeText(this, "All permissions granted", Toast.LENGTH_SHORT).show();
+                registerPhoneStateListener();
             } else {
-                Toast.makeText(this, "Permissions denied. Cannot proceed", Toast.LENGTH_SHORT).show();
-                finish();
+                ActivityCompat.requestPermissions(this,
+                        deniedPermissions.toArray(new String[0]),
+                        PERMISSION_REQUEST_CODE);
             }
         }
     }
 
-
     private void makeEmergencyCall() {
         if (emergencyContact1 != null && !emergencyContact1.isEmpty()) {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel: " + emergencyContact1));
+            callIntent.setData(Uri.parse("tel:" + emergencyContact1));
             startActivity(callIntent);
         } else {
-            Toast.makeText(this,
-                    "No emergency contact to call",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No emergency contact to call", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -280,6 +267,4 @@ public class CallingActivity extends AppCompatActivity {
         startActivity(new Intent(CallingActivity.this, MainActivity.class));
         finish();
     }
-
-
 }
