@@ -17,25 +17,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ToggleButton
         android:id="@+id/TbLocationSharing"
         android:layout_width="70dp"
         android:layout_height="56dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="ToggleButton"
         android:textColor="#FBF8F8"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/IV_Backgroumd"
-        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="@+id/IV_Backgroumd"
         app:layout_constraintTop_toTopOf="@+id/IV_Backgroumd" />
-
 
     <ImageView
         android:id="@+id/IV_Backgroumd"
         android:layout_width="324dp"
         android:layout_height="71dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="48dp"
         android:src="@drawable/radiusbox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -44,14 +44,14 @@
 
     <TextView
         android:id="@+id/TVShowLocarion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="225dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/amaranth_bold_italic"
-        android:text="Show Location"
+        android:text="Location Sharing"
         android:textColor="#F0F0F0"
-        android:textSize="34sp"
+        android:textSize="28sp"
         app:layout_constraintStart_toStartOf="@+id/IV_Backgroumd"
         app:layout_constraintTop_toTopOf="@+id/IV_Backgroumd" />
 
@@ -59,7 +59,7 @@
         android:id="@+id/btnViewLocationLogs"
         android:layout_width="240dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:text="View Location Logs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
